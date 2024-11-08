@@ -3,15 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
 
-export default function Suppliers({ suppliers }) {
+export default function Category({ categories }) {
     // Definir las columnas de la tabla supplier
     const columns = [
         { field: 'name', headerName: 'Nombre', flex: 1 },
-        { field: 'email', headerName: 'Email', flex: 1 },
-        { field: 'phone', headerName: 'Telefono', flex: 1 },
-        { field: 'address', headerName: 'Direccion', flex: 1 },
-        { field: 'address_reference', headerName: 'Referencia', flex: 1 },
-        { field: 'city', headerName: 'Ciudad', flex: 1 },
+        { field: 'description', headerName: 'Descripcion', flex: 1 },
         {
             field: 'actions',
             headerName: 'Acciones',
@@ -21,7 +17,7 @@ export default function Suppliers({ suppliers }) {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => window.location.href = route('supplier.edit', params.row.id)}
+                        onClick={() => window.location.href = route('category.edit', params.row.id)}
                     >
                         <i className="bi bi-pencil"></i>
                     </button>
@@ -39,7 +35,7 @@ export default function Suppliers({ suppliers }) {
 
     const handleDelete = (id) => {
         if (confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
-            Head.delete(route('suppliers.destroy', id), {
+            Head.delete(route('category.destroy', id), {
                 onSuccess: () => {
                     alert('Proveedor eliminado correctamente.');
                 },
@@ -51,14 +47,10 @@ export default function Suppliers({ suppliers }) {
     };
 
     // convertir los datos de suppliers a un formato compatible con la tabla
-    const rows = suppliers.map((supplier) => ({
-        id: supplier.id,
-        name: supplier.name,
-        email: supplier.email,
-        phone: supplier.phone,
-        address: supplier.address,
-        address_reference: supplier.address_reference,
-        city: supplier.city,
+    const rows = categories.map((categoty) => ({
+        id: categoty.id,
+        name: categoty.name,
+        address: categoty.address,
     }));
 
     const paginationModel = { page: 0, pageSize: 5 };
@@ -69,19 +61,19 @@ export default function Suppliers({ suppliers }) {
                 <h2 className="text-2xl font-bold flex items-center gap-2">
                     <i className="bi bi-box-seam-fill"></i>
                     <span className="divider divider-horizontal"></span>
-                    <p>Suppliers</p>
+                    <p>Categorias</p>
                 </h2>
             }
         >
-            <Head title="Store Information" />
+            <Head title="Categorias" />
 
             <div className="py-12">
                 <div className="container mx-auto px-4">
                     <div className="card shadow-lg rounded-lg bg-base-100">
                         <div className="card-body">
                             <div className='flex items-center justify-between'>
-                                <h2 className="text-lg font-semibold">Proveedores</h2>
-                                <button onClick={() => window.location.href = route('supplier.create')} type='button' className='btn btn-primary'>Nuevo</button>
+                                <h2 className="text-lg font-semibold">Categorias</h2>
+                                <button onClick={() => window.location.href = route('category.create')} type='button' className='btn btn-primary'>Nuevo</button>
                             </div>
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid

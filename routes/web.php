@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/admin/store-information', \App\Http\Controllers\StoreInformationController::class);
     Route::resource('/admin/supplier', \App\Http\Controllers\SupplierController::class);
+    Route::resource('/admin/category', \App\Http\Controllers\CategoryController::class);
     // Route para actualizar el tema
     Route::post('/set-theme', function (Illuminate\Http\Request $request) {
         session(['theme' => $request->theme]);
