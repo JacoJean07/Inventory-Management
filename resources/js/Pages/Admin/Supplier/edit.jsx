@@ -1,43 +1,43 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function Edit({ storeInformation }) {
+export default function Edit({ supplier }) {
     const { data, setData, put, errors } = useForm({
-        name: storeInformation.name || '',
-        address: storeInformation.address || '',
-        address_reference: storeInformation.address_reference || '',
-        city: storeInformation.city || '',
-        phone: storeInformation.phone || '',
-        email: storeInformation.email || '',
+        name: supplier.name || '',
+        address: supplier.address || '',
+        address_reference: supplier.address_reference || '',
+        city: supplier.city || '',
+        phone: supplier.phone || '',
+        email: supplier.email || '',
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('store-information.update', storeInformation.id)); // Envía los datos a la ruta 'store-information.update'
+        put(route('supplier.update', supplier.id)); // Envía los datos a la ruta 'store-information.update'
     };
 
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-2xl font-bold flex items-center gap-2">
-                    <i className="bi bi-shop"></i>
+                    <i className="bi bi-box-seam-fill"></i>
                     <span className="divider divider-horizontal"></span>
-                    <p>Editar la Informacion de la tienda</p>
+                    <p>Editar la Informacion del Proveedor {supplier.name}</p>
                 </h2>
             }
         >
-            <Head title="Edit Store Information" />
+            <Head title="Edit Supplier" />
 
             <div className="py-12">
                 <div className="container mx-auto px-4">
                     <div className="card bg-base-100 shadow-lg rounded-lg">
                         <div className="card-body">
-                            <h2 className="text-lg font-semibold">Editar Informacion de la tienda</h2>
+                            <h2 className="text-lg font-semibold">Editar la Informacion del Proveedor {supplier.name}</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-building"></i> Nombre de la tienda
+                                            <i className="bi bi-building"></i> Nombre del Proveedor
                                         </span>
                                     </label>
                                     <input

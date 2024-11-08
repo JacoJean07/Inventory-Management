@@ -8,27 +8,27 @@ export default function StoreInformation({ storeInformation }) {
                 <h2 className="text-2xl font-bold flex items-center gap-2">
                     <i className="bi bi-shop"></i>
                     <span className="divider divider-horizontal"></span>
-                    <p>Store Information</p>
+                    <p>Informacion de la tienda</p>
                 </h2>
             }
         >
-            <Head title="Store Information" />
+            <Head title="Informacion de la tienda" />
 
             <div className="py-12">
                 <div className="container mx-auto px-4">
                     <div className="card bg-base-100 shadow-lg rounded-lg">
                         <div className="card-body">
-                            <h2 className="text-lg font-semibold">Info of Store</h2>
+                            <h2 className="text-lg font-semibold">Informacion de la tienda</h2>
                             <form className="space-y-4">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-building"></i> Store Name
+                                            <i className="bi bi-building"></i> Nombre de la Tienda
                                         </span>
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Enter store name"
+                                        placeholder="Ingresar el nombre"
                                         className="input input-bordered w-full"
                                         name="name"
                                         value={storeInformation.name}
@@ -39,12 +39,12 @@ export default function StoreInformation({ storeInformation }) {
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-geo-alt"></i> Address
+                                            <i className="bi bi-geo-alt"></i> Direccion
                                         </span>
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Enter address"
+                                        placeholder="Ingresar la direccion"
                                         className="input input-bordered w-full"
                                         name="address"
                                         value={storeInformation.address}
@@ -55,12 +55,12 @@ export default function StoreInformation({ storeInformation }) {
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-signpost"></i> Address Reference
+                                            <i className="bi bi-signpost"></i> Referencia de la direccion
                                         </span>
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Enter address reference"
+                                        placeholder="Ingresar la referencia"
                                         className="input input-bordered w-full"
                                         name="address_reference"
                                         value={storeInformation.address_reference}
@@ -71,12 +71,12 @@ export default function StoreInformation({ storeInformation }) {
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-geo"></i> City
+                                            <i className="bi bi-geo"></i> Ciudad
                                         </span>
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Enter city"
+                                        placeholder="Ingresar la Ciudad"
                                         className="input input-bordered w-full"
                                         name="city"
                                         value={storeInformation.city}
@@ -87,12 +87,12 @@ export default function StoreInformation({ storeInformation }) {
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-telephone"></i> Phone
+                                            <i className="bi bi-telephone"></i> Telefono celular
                                         </span>
                                     </label>
                                     <input
                                         type="tel"
-                                        placeholder="Enter phone number"
+                                        placeholder="Ingresar el telefono celular"
                                         className="input input-bordered w-full"
                                         name="phone"
                                         value={storeInformation.phone}
@@ -103,12 +103,12 @@ export default function StoreInformation({ storeInformation }) {
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">
-                                            <i className="bi bi-envelope"></i> Email
+                                            <i className="bi bi-envelope"></i> Email / Correo Electronico
                                         </span>
                                     </label>
                                     <input
                                         type="email"
-                                        placeholder="Enter email"
+                                        placeholder="Ingresar el email"
                                         className="input input-bordered w-full"
                                         name="email"
                                         value={storeInformation.email}
@@ -122,7 +122,7 @@ export default function StoreInformation({ storeInformation }) {
                                         className="btn btn-primary w-full flex items-center gap-2"
                                         onClick={() => window.location.href = route('store-information.edit', { id: storeInformation.id })}
                                     >
-                                        <i className="bi bi-pencil-square"></i> Edit Store Information
+                                        <i className="bi bi-pencil-square"></i> Editar la Informacion de la tienda
                                     </button>
                                 </div>
                             </form>

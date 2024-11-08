@@ -143,6 +143,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         </Link>
                     </li>
                     <li>
+                        <Link href={route('supplier.index')} className="btn btn-ghost gap-2">
+                            <i class="bi bi-box-seam-fill"></i>
+                            Supplier
+                        </Link>
+                    </li>
+                    <li>
                         <Link href={route('profile.edit')} className="btn btn-ghost gap-2">
                             <i className="bi bi-person-circle"></i>
                             Profile

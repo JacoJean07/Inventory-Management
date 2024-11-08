@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreInformationController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('/admin/store-information', \App\Http\Controllers\StoreInformationController::class);
+    Route::resource('/admin/supplier', \App\Http\Controllers\SupplierController::class);
     // Route para actualizar el tema
     Route::post('/set-theme', function (Illuminate\Http\Request $request) {
         session(['theme' => $request->theme]);
