@@ -34,6 +34,18 @@ export default function Create(Supplier) {
                         <div className="card-body">
                             <h2 className="text-lg font-semibold">Datos del nuevo Proveedor</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
+
+                                {Object.keys(errors).length > 0 && (
+                                    <div className="text-red-500">
+                                        <h3>Errores encontrados:</h3>
+                                        <ul>
+                                            {Object.keys(errors).map((field, index) => (
+                                                <li key={index}>{errors[field]}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text flex items-center gap-2">

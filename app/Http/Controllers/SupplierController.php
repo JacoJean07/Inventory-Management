@@ -44,7 +44,9 @@ class SupplierController extends Controller
         if (Gate::allows('create-suppliers', Supplier::class)) {
             $supplier = Supplier::create($request->validated());
 
-            return redirect()->route('suppliers.index');
+            return Inertia::render('Admin/Supplier/index', [
+                'suppliers' => Supplier::all()
+            ]);
         } else {
             abort(403); // Código de error de autorización
         }
@@ -65,7 +67,9 @@ class SupplierController extends Controller
     {
         if (Gate::allows('edit-suppliers', $supplier)) {
             $supplier->update($request->validated());
-            return redirect()->route('suppliers.index');
+            return Inertia::render('Admin/Supplier/index', [
+                'suppliers' => Supplier::all()
+            ]);
         } else {
             abort(404);
         }
@@ -75,7 +79,9 @@ class SupplierController extends Controller
     {
         if (Gate::allows('delete-suppliers', $supplier)) {
             $supplier->delete();
-            return redirect()->route('suppliers.index');
+            return Inertia::render('Admin/Supplier/index', [
+                'suppliers' => Supplier::all()
+            ]);
         } else {
             abort(404);
         }

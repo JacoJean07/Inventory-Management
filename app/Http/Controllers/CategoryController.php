@@ -44,7 +44,9 @@ class CategoryController extends Controller
         if (Gate::allows('create-categories', Category::class)) {
             $category = Category::create($request->validated());
 
-            return redirect()->route('category.index');
+            return Inertia::render('Admin/Category/index', [
+                'categories' => Category::all()
+            ]);
         } else {
             abort(403); // Código de error de autorización
         }
@@ -65,7 +67,10 @@ class CategoryController extends Controller
     {
         if (Gate::allows('edit-categories', $category)) {
             $category->update($request->validated());
-            return redirect()->route('category.index');
+
+            return Inertia::render('Admin/Category/index', [
+                'categories' => Category::all()
+            ]);
         } else {
             abort(404);
         }
@@ -75,7 +80,10 @@ class CategoryController extends Controller
     {
         if (Gate::allows('delete-categories', $category)) {
             $category->delete();
-            return redirect()->route('category.index');
+
+            return Inertia::render('Admin/Category/index', [
+                'categories' => Category::all()
+            ]);
         } else {
             abort(404);
         }

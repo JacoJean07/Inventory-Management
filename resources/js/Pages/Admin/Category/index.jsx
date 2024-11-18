@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 export default function Category({ categories }) {
     // Definir las columnas de la tabla supplier
     const columns = [
+        { field: 'id', headerName: 'ID', flex: 1},
         { field: 'name', headerName: 'Nombre', flex: 1 },
         { field: 'description', headerName: 'Descripcion', flex: 1 },
         {
@@ -46,11 +47,10 @@ export default function Category({ categories }) {
         }
     };
 
-    // convertir los datos de suppliers a un formato compatible con la tabla
     const rows = categories.map((categoty) => ({
         id: categoty.id,
         name: categoty.name,
-        address: categoty.address,
+        description: categoty.description,
     }));
 
     const paginationModel = { page: 0, pageSize: 5 };
@@ -59,7 +59,7 @@ export default function Category({ categories }) {
         <AuthenticatedLayout
             header={
                 <h2 className="text-2xl font-bold flex items-center gap-2">
-                    <i className="bi bi-box-seam-fill"></i>
+                    <i className="bi bi-tags-fill"></i>
                     <span className="divider divider-horizontal"></span>
                     <p>Categorias</p>
                 </h2>
