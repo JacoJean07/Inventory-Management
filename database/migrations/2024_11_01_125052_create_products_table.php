@@ -15,15 +15,26 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('sku');
-            $table->string('barcode');
-            $table->string('category_id');
-            $table->string('supplier_id');
+            $table->string('sku')->unique(); // SKU único
+            $table->string('barcode')->unique(); // Código de barras único
+            $table->unsignedBigInteger('category_id'); // Relación con la categoría
+            $table->unsignedBigInteger('user_id'); // Relación con el usuario
             $table->decimal('price', 8, 2);
             $table->decimal('cost', 8, 2);
             $table->integer('quantity');
             $table->integer('reorder_level');
             $table->timestamps();
+
+            // Claves foráneas
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories')
+                  ->onDelete('cascade');
+
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
         });
     }
 

@@ -42,7 +42,12 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         if (Gate::allows('create-categories', Category::class)) {
-            $category = Category::create($request->validated());
+            // Combina los datos validados con el user_id
+            $data = $request->validated();
+            $data['user_id'] = auth()->id();
+
+            // Crea la categoría con los datos completos
+            $category = Category::create($data);
 
             return Inertia::render('Admin/Category/index', [
                 'categories' => Category::all()

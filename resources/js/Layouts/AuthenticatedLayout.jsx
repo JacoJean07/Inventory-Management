@@ -139,31 +139,43 @@ export default function AuthenticatedLayout({ header, children }) {
                     <li>
                         <Link href={route('store-information.index')} className="btn btn-ghost gap-2">
                             <i className="bi bi-shop"></i>
-                            Store Information
+                            Informacion de la Tienda
                         </Link>
                     </li>
                     <li>
                         <Link href={route('supplier.index')} className="btn btn-ghost gap-2">
                             <i class="bi bi-box-seam-fill"></i>
-                            Supplier
+                            Proveedor
                         </Link>
                     </li>
                     <li>
                         <Link href={route('category.index')} className="btn btn-ghost gap-2">
                         <i class="bi bi-tags-fill"></i>
-                            Category
+                            Categoria
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href={route('product.index')} className="btn btn-ghost gap-2">
+                        <i class="bi bi-grid-fill"></i>
+                            Producto
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href={route('receipts.index')} className="btn btn-ghost gap-2">
+                        <i class="bi bi-grid-fill"></i>
+                            Ventas
                         </Link>
                     </li>
                     <li>
                         <Link href={route('profile.edit')} className="btn btn-ghost gap-2">
                             <i className="bi bi-person-circle"></i>
-                            Profile
+                            Perfil
                         </Link>
                     </li>
                     <li>
                         <Link href={route('logout')} method="post" as="button" className="btn btn-ghost gap-2">
                             <i className="bi bi-box-arrow-right"></i>
-                            Log Out
+                            Cerrar sesion
                         </Link>
                     </li>
                 </ul>

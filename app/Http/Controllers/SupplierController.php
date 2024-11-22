@@ -42,7 +42,12 @@ class SupplierController extends Controller
     public function store(SupplierRequest $request)
     {
         if (Gate::allows('create-suppliers', Supplier::class)) {
-            $supplier = Supplier::create($request->validated());
+            // Combina los datos validados con el user_id
+            $data = $request->validated();
+            $data['user_id'] = auth()->id();
+
+            // Crea la categoría con los datos completos
+            $category = Supplier::create($data);
 
             return Inertia::render('Admin/Supplier/index', [
                 'suppliers' => Supplier::all()

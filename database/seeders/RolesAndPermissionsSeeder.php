@@ -83,11 +83,39 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'create-products']);
         }
 
+        // Permisos para VER LOS Recibos
+        if (! Permission::where('name', 'view-receipts')->exists()) {
+            Permission::create(['name' => 'view-receipts']);
+        }
+        if (! Permission::where('name', 'edit-receipts')->exists()) {
+            Permission::create(['name' => 'edit-receipts']);
+        }
+        if (! Permission::where('name', 'delete-receipts')->exists()) {
+            Permission::create(['name' => 'delete-receipts']);
+        }
+        if (! Permission::where('name', 'create-receipts')->exists()) {
+            Permission::create(['name' => 'create-receipts']);
+        }
+
+        // Permisos para VER LOS detalles de los recibos
+        if (! Permission::where('name', 'view-receipt_items')->exists()) {
+            Permission::create(['name' => 'view-receipt_items']);
+        }
+        if (! Permission::where('name', 'edit-receipt_items')->exists()) {
+            Permission::create(['name' => 'edit-receipt_items']);
+        }
+        if (! Permission::where('name', 'delete-receipt_items')->exists()) {
+            Permission::create(['name' => 'delete-receipt_items']);
+        }
+        if (! Permission::where('name', 'create-receipt_items')->exists()) {
+            Permission::create(['name' => 'create-receipt_items']);
+        }
+
         // Asignar permisos a roles si no estan asignados
         $roleAdmin = Role::where('name', 'admin')->first();
         $roleSeller = Role::where('name', 'seller')->first();
 
-        if (! $roleAdmin->hasPermissionTo('view-products')) {
+        if (! $roleAdmin->hasPermissionTo('view-receipts')) {
             $roleAdmin->givePermissionTo(Permission::all());
         }
 

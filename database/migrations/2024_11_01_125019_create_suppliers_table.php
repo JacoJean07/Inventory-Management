@@ -19,7 +19,14 @@ return new class extends Migration
             $table->string('address');
             $table->string('address_reference');
             $table->string('city');
+            $table->unsignedBigInteger('user_id'); // Relación con el usuario
             $table->timestamps();
+
+            // Clave foránea
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
         });
     }
 

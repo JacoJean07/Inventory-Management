@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
+use App\Models\Receipt;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ProductPolicy
+class ReceiptPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -14,16 +14,16 @@ class ProductPolicy
     public function viewAny(User $user): bool
     {
         //
-        return $user->hasRole('admin');
+        return $user->hasRole('admin') || $user->hasPermission('view-receipts');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Product $product): bool
+    public function view(User $user, Receipt $receipt): bool
     {
         //
-        return $user->hasRole('admin');
+        return $user->hasPermission('view-receipts');
     }
 
     /**
@@ -32,42 +32,40 @@ class ProductPolicy
     public function create(User $user): bool
     {
         //
-        return $user->hasRole('admin');
+        return $user->hasPermission('create-receipts');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product): bool
+    public function update(User $user, Receipt $receipt): bool
     {
         //
-        return $user->hasRole('admin');
+        return $user->hasPermission('edit-receipts');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Product $product): bool
+    public function delete(User $user, Receipt $receipt): bool
     {
         //
-        return $user->hasRole('admin');
+        return $user->hasPermission('delete-receipts');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Product $product): bool
+    public function restore(User $user, Receipt $receipt): bool
     {
         //
-        return $user->hasRole('admin');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Product $product): bool
+    public function forceDelete(User $user, Receipt $receipt): bool
     {
         //
-        return $user->hasRole('admin');
     }
 }

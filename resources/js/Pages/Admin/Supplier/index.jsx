@@ -1,6 +1,6 @@
 import * as React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
 
 export default function Suppliers({ suppliers }) {
@@ -38,16 +38,18 @@ export default function Suppliers({ suppliers }) {
     ];
 
     const handleDelete = (id) => {
-        if (confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
-            Head.delete(route('suppliers.destroy', id), {
-                onSuccess: () => {
-                    alert('Proveedor eliminado correctamente.');
-                },
-                onError: () => {
-                    alert('Hubo un error al eliminar el proveedor.');
-                },
-            });
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
+            return;
         }
+
+        router.delete(route('supplier.destroy', id), {
+            onSuccess: () => {
+                alert('Proveedor eliminado correctamente.');
+            },
+            onError: () => {
+                alert('Hubo un error al eliminar al proveedor.');
+            },
+        });
     };
 
     // convertir los datos de suppliers a un formato compatible con la tabla

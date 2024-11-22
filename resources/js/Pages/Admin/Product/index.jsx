@@ -3,12 +3,17 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
 
-export default function Category({ categories }) {
-    // Definir las columnas de la tabla supplier
+export default function Product({ products }) {
+    // Definir las columnas de la tabla productos
     const columns = [
-        { field: 'id', headerName: 'ID', flex: 1},
+        { field: 'id', headerName: 'ID', flex: 1 },
         { field: 'name', headerName: 'Nombre', flex: 1 },
-        { field: 'description', headerName: 'Descripcion', flex: 1 },
+        { field: 'description', headerName: 'Descripción', flex: 1 },
+        { field: 'sku', headerName: 'SKU', flex: 1 },
+        { field: 'barcode', headerName: 'Código de Barras', flex: 1 },
+        { field: 'category', headerName: 'Categoría', flex: 1 },
+        { field: 'price', headerName: 'Precio', flex: 1 },
+        { field: 'quantity', headerName: 'Cantidad', flex: 1 },
         {
             field: 'actions',
             headerName: 'Acciones',
@@ -18,7 +23,7 @@ export default function Category({ categories }) {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => window.location.href = route('category.edit', params.row.id)}
+                        onClick={() => window.location.href = route('product.edit', params.row.id)}
                     >
                         <i className="bi bi-pencil"></i>
                     </button>
@@ -35,24 +40,29 @@ export default function Category({ categories }) {
     ];
 
     const handleDelete = (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
             return;
         }
 
-        router.delete(route('category.destroy', id), {
+        router.delete(route('product.destroy', id), {
             onSuccess: () => {
-                alert('Categoría eliminada correctamente.');
+                alert('Producto eliminado correctamente.');
             },
             onError: () => {
-                alert('Hubo un error al eliminar la categoría.');
+                alert('Hubo un error al eliminar el producto.');
             },
         });
     };
 
-    const rows = categories.map((categoty) => ({
-        id: categoty.id,
-        name: categoty.name,
-        description: categoty.description,
+    const rows = products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        sku: product.sku,
+        barcode: product.barcode,
+        category: product.category?.name || 'Sin categoría',
+        price: `$${product.price.toFixed(2)}`,
+        quantity: product.quantity,
     }));
 
     const paginationModel = { page: 0, pageSize: 5 };
@@ -61,21 +71,23 @@ export default function Category({ categories }) {
         <AuthenticatedLayout
             header={
                 <h2 className="text-2xl font-bold flex items-center gap-2">
-                    <i className="bi bi-tags-fill"></i>
+                    <i className="bi bi-grid-fill"></i>
                     <span className="divider divider-horizontal"></span>
-                    <p>Categorias</p>
+                    <p>Productos</p>
                 </h2>
             }
         >
-            <Head title="Categorias" />
+            <Head title="Productos" />
 
             <div className="py-12">
                 <div className="container mx-auto px-4">
                     <div className="card shadow-lg rounded-lg bg-base-100">
                         <div className="card-body">
-                            <div className='flex items-center justify-between'>
-                                <h2 className="text-lg font-semibold">Categorias</h2>
-                                <button onClick={() => window.location.href = route('category.create')} type='button' className='btn btn-primary'>Nuevo</button>
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-semibold">Productos</h2>
+                                <button onClick={() => window.location.href = route('product.create')} type="button" className="btn btn-primary">
+                                    Nuevo
+                                </button>
                             </div>
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid
