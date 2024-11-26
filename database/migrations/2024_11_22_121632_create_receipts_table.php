@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Usuario que generó el recibo
+            $table->unsignedBigInteger('customer_id'); // Usuario que generó el recibo
             $table->string('type'); // Tipo: 'compra', 'venta'
             $table->decimal('total', 10, 2); // Total de la transacción
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

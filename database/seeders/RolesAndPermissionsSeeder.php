@@ -111,11 +111,25 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'create-receipt_items']);
         }
 
+        // Permisos para VER LOS detalles de los recibos
+        if (! Permission::where('name', 'view-customers')->exists()) {
+            Permission::create(['name' => 'view-customers']);
+        }
+        if (! Permission::where('name', 'edit-customers')->exists()) {
+            Permission::create(['name' => 'edit-customers']);
+        }
+        if (! Permission::where('name', 'delete-customers')->exists()) {
+            Permission::create(['name' => 'delete-customers']);
+        }
+        if (! Permission::where('name', 'create-customers')->exists()) {
+            Permission::create(['name' => 'create-customers']);
+        }
+
         // Asignar permisos a roles si no estan asignados
         $roleAdmin = Role::where('name', 'admin')->first();
         $roleSeller = Role::where('name', 'seller')->first();
 
-        if (! $roleAdmin->hasPermissionTo('view-receipts')) {
+        if (! $roleAdmin->hasPermissionTo('view-customers')) {
             $roleAdmin->givePermissionTo(Permission::all());
         }
 

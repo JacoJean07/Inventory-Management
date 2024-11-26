@@ -2,28 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Receipt;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ReceiptPolicy
+class CustomerPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        //
-        return $user->hasRole('admin') || $user->hasPermissionTo('view-receipts');
+        return $user->hasPermissionto('view-customers');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Receipt $receipt): bool
+    public function view(User $user, Customer $customer): bool
     {
-        //
-        return $user->hasPermissionTo('view-receipts');
+        return $user->hasPermissionto('view-customers');
     }
 
     /**
@@ -31,32 +29,29 @@ class ReceiptPolicy
      */
     public function create(User $user): bool
     {
-        //
-        return $user->hasPermissionTo('create-receipts');
+        return $user->hasPermissionto('create-customers');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Receipt $receipt): bool
+    public function update(User $user, Customer $customer): bool
     {
-        //
-        return $user->hasPermissionTo('edit-receipts');
+        return $user->hasPermissionto('update-customers');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Receipt $receipt): bool
+    public function delete(User $user, Customer $customer): bool
     {
-        //
-        return $user->hasPermissionTo('delete-receipts');
+        return $user->hasPermissionto('delete-customers');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Receipt $receipt): bool
+    public function restore(User $user, Customer $customer): bool
     {
         //
     }
@@ -64,7 +59,7 @@ class ReceiptPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Receipt $receipt): bool
+    public function forceDelete(User $user, Customer $customer): bool
     {
         //
     }

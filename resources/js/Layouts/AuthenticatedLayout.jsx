@@ -149,6 +149,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         </Link>
                     </li>
                     <li>
+                        <Link href={route('customers.index')} className="btn btn-ghost gap-2">
+                        <i class="bi bi-people-fill"></i>
+                            Clientes
+                        </Link>
+                    </li>
+                    <li>
                         <Link href={route('category.index')} className="btn btn-ghost gap-2">
                         <i class="bi bi-tags-fill"></i>
                             Categoria

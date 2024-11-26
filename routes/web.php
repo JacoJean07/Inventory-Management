@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreInformationController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReceiptController;
 use Illuminate\Foundation\Application;
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/store-information', \App\Http\Controllers\StoreInformationController::class);
     Route::resource('/admin/supplier', \App\Http\Controllers\SupplierController::class);
     Route::resource('/admin/category', \App\Http\Controllers\CategoryController::class);
+    Route::resource('/admin/customers', \App\Http\Controllers\CustomerController::class);
     Route::resource('/admin/product', \App\Http\Controllers\ProductController::class);
     Route::resource('/admin/receipts', \App\Http\Controllers\ReceiptController::class);
 

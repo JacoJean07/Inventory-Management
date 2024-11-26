@@ -12,7 +12,7 @@ class ReceiptItemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin') || $user->hasPermission('view-receipt_items');
+        return $user->hasRole('admin') || $user->hasPermissionTo('view-receipt_items');
     }
 
     /**
@@ -20,7 +20,7 @@ class ReceiptItemPolicy
      */
     public function view(User $user, ReceiptItem $receiptItem): bool
     {
-        return $user->hasPermission('view-receipt_items');
+        return $user->hasPermissionTo('view-receipt_items');
     }
 
     /**
@@ -28,7 +28,7 @@ class ReceiptItemPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('create-receipt_items');
+        return $user->hasPermissionTo('create-receipt_items');
     }
 
     /**
@@ -36,7 +36,7 @@ class ReceiptItemPolicy
      */
     public function update(User $user, ReceiptItem $receiptItem): bool
     {
-        return $user->hasPermission('edit-receipt_items');
+        return $user->hasPermissionTo('edit-receipt_items');
     }
 
     /**
@@ -44,7 +44,7 @@ class ReceiptItemPolicy
      */
     public function delete(User $user, ReceiptItem $receiptItem): bool
     {
-        return $user->hasPermission('delete-receipt_items');
+        return $user->hasPermissionTo('delete-receipt_items');
     }
 
     /**

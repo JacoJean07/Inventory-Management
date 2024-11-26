@@ -23,9 +23,24 @@ export default function Create({ products }) {
 
     // Agrega un producto a la lista de items
     const addItem = (product) => {
+        if (product.stock <= 0 && data.type === 'venta') {
+            alert(`El producto "${product.name}" no tiene stock disponible.`);
+            return;
+        }
+
         const existingItem = data.items.find((item) => item.product_id === product.id);
         if (existingItem) {
-            // Si el producto ya existe, incrementa la cantidad
+            // Verificar si hay suficiente stock para ventas
+            if (
+                data.type === 'venta' &&
+                existingItem.quantity + 1 > product.stock
+            ) {
+                alert(
+                    `No hay suficiente stock para "${product.name}". Disponible: ${product.stock}`
+                );
+                return;
+            }
+
             setData(
                 'items',
                 data.items.map((item) =>
@@ -35,10 +50,16 @@ export default function Create({ products }) {
                 )
             );
         } else {
-            // Si no existe, agrégalo con cantidad inicial 1
             setData('items', [
                 ...data.items,
-                { product_id: product.id, name: product.name, price: product.price, quantity: 1, discount: 0 },
+                {
+                    product_id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    discount: 0,
+                    stock: product.stock, // Para validar stock disponible
+                },
             ]);
         }
     };
@@ -46,6 +67,27 @@ export default function Create({ products }) {
     // Actualiza un item (cantidad o descuento)
     const updateItem = (index, key, value) => {
         const updatedItems = [...data.items];
+
+        // Validación de cantidad
+        if (key === 'quantity') {
+            const stock = updatedItems[index].stock;
+            if (data.type === 'venta' && value > stock) {
+                alert(
+                    `No hay suficiente stock para "${updatedItems[index].name}". Disponible: ${stock}`
+                );
+                return;
+            }
+        }
+
+        // Validación de descuento
+        if (key === 'discount') {
+            const price = updatedItems[index].price;
+            if (value > price) {
+                alert(`El descuento no puede ser mayor al precio del producto.`);
+                return;
+            }
+        }
+
         updatedItems[index][key] = value;
         setData('items', updatedItems);
     };
@@ -55,7 +97,12 @@ export default function Create({ products }) {
         setData('items', data.items.filter((_, i) => i !== index));
     };
 
-    // Calcula el total
+    // Vaciar lista de productos
+    const clearItems = () => {
+        setData('items', []);
+    };
+
+    // Calcula el total general
     const calculateTotal = () => {
         return data.items.reduce(
             (total, item) =>
@@ -107,7 +154,7 @@ export default function Create({ products }) {
                                         className="p-2 hover:bg-gray-100 cursor-pointer"
                                         onClick={() => addItem(product)}
                                     >
-                                        {product.name} - ${product.price}
+                                        {product.name} - ${product.price} (Stock: {product.stock})
                                     </li>
                                 ))}
                             </ul>
@@ -116,6 +163,13 @@ export default function Create({ products }) {
                         {/* Lista de items */}
                         <div className="mb-4">
                             <h3>Productos Seleccionados</h3>
+                            <button
+                                type="button"
+                                className="btn btn-error mb-2"
+                                onClick={clearItems}
+                            >
+                                Vaciar Lista
+                            </button>
                             <table className="table w-full">
                                 <thead>
                                     <tr>

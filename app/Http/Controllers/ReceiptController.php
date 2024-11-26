@@ -34,9 +34,7 @@ class ReceiptController extends Controller
      */
     public function create()
     {
-        if (!Gate::allows('create', Receipt::class)) {
-            abort(403);
-        }
+        $this->authorize('create', Receipt::class);
 
         $products = Product::all();
 
