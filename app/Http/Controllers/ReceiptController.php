@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Receipt;
 use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Supplier;
 use App\Models\ReceiptItem;
 use App\Policies\ReceiptPolicy;
+use App\Http\Requests\Receipt\StoreReceiptRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
@@ -37,54 +40,54 @@ class ReceiptController extends Controller
         $this->authorize('create', Receipt::class);
 
         $products = Product::all();
+        $customers = Customer::all();
+        $suppliers = Supplier::all();
 
         return Inertia::render('Admin/Receipt/create', [
-            'products' => $products
+            'products' => $products,
+            'customers' => $customers,
+            'suppliers' => $suppliers,
         ]);
     }
 
     /**
      * Almacena un nuevo recibo.
      */
-    public function store(Request $request)
+    public function store(StoreReceiptRequest $request)
     {
         if (!Gate::allows('create', Receipt::class)) {
             abort(403);
         }
 
-        $data = $request->validate([
-            'type' => 'required|in:compra,venta',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
-        ]);
+        // Datos validados
+        $data = $request->validated();
 
         // Crea el recibo principal
         $receipt = Receipt::create([
             'user_id' => auth()->id(),
             'type' => $data['type'],
             'total' => collect($data['items'])->sum(function ($item) {
-                return $item['quantity'] * $item['price'];
+                return $item['quantity'] * ($item['price'] - $item['discount']);
             }),
+            'customer_id' => $data['type'] === 'venta' ? $data['customer_id'] : null,
+            'supplier_id' => $data['type'] === 'compra' ? $data['supplier_id'] : null,
         ]);
 
-        // Crea los elementos del recibo
+        // Procesar los elementos del recibo
         foreach ($data['items'] as $item) {
             ReceiptItem::create([
                 'receipt_id' => $receipt->id,
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
+                'discount' => $item['discount'],
             ]);
 
-            // Actualiza el inventario
+            // Actualiza el inventario según el tipo
             $product = Product::find($item['product_id']);
             if ($data['type'] === 'venta') {
-                // Restar del inventario
                 $product->quantity -= $item['quantity'];
             } else {
-                // Sumar al inventario
                 $product->quantity += $item['quantity'];
             }
             $product->save();
@@ -92,6 +95,7 @@ class ReceiptController extends Controller
 
         return redirect()->route('receipts.index')->with('message', 'Recibo generado correctamente.');
     }
+
 
     /**
      * Muestra los detalles de un recibo.

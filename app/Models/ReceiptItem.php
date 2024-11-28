@@ -14,6 +14,7 @@ class ReceiptItem extends Model
         'product_id',
         'quantity',
         'price',
+        'discount',
     ];
 
     /**
