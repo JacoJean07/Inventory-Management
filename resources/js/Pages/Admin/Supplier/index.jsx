@@ -2,14 +2,56 @@ import * as React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from '@mui/material';
 
 export default function Suppliers({ suppliers }) {
+    // Estado para búsqueda
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [filteredRows, setFilteredRows] = React.useState([]);
+
+    // Convertir los datos de suppliers a un formato compatible con la tabla
+    const rows = suppliers.map((supplier) => ({
+        id: supplier.id,
+        name: supplier.name,
+        email: supplier.email,
+        phone: supplier.phone,
+        address: supplier.address,
+        address_reference: supplier.address_reference,
+        city: supplier.city,
+    }));
+
+    // Filtrar filas basándose en el término de búsqueda
+    React.useEffect(() => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = rows.filter((row) =>
+            Object.values(row).some((value) =>
+                value?.toString().toLowerCase().includes(lowerCaseSearchTerm)
+            )
+        );
+        setFilteredRows(filtered);
+    }, [searchTerm, rows]);
+
+    const handleDelete = (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
+            return;
+        }
+
+        router.delete(route('supplier.destroy', id), {
+            onSuccess: () => {
+                alert('Proveedor eliminado correctamente.');
+            },
+            onError: () => {
+                alert('Hubo un error al eliminar al proveedor.');
+            },
+        });
+    };
+
     // Definir las columnas de la tabla supplier
     const columns = [
         { field: 'name', headerName: 'Nombre', flex: 1 },
         { field: 'email', headerName: 'Email', flex: 1 },
-        { field: 'phone', headerName: 'Telefono', flex: 1 },
-        { field: 'address', headerName: 'Direccion', flex: 1 },
+        { field: 'phone', headerName: 'Teléfono', flex: 1 },
+        { field: 'address', headerName: 'Dirección', flex: 1 },
         { field: 'address_reference', headerName: 'Referencia', flex: 1 },
         { field: 'city', headerName: 'Ciudad', flex: 1 },
         {
@@ -37,32 +79,6 @@ export default function Suppliers({ suppliers }) {
         },
     ];
 
-    const handleDelete = (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
-            return;
-        }
-
-        router.delete(route('supplier.destroy', id), {
-            onSuccess: () => {
-                alert('Proveedor eliminado correctamente.');
-            },
-            onError: () => {
-                alert('Hubo un error al eliminar al proveedor.');
-            },
-        });
-    };
-
-    // convertir los datos de suppliers a un formato compatible con la tabla
-    const rows = suppliers.map((supplier) => ({
-        id: supplier.id,
-        name: supplier.name,
-        email: supplier.email,
-        phone: supplier.phone,
-        address: supplier.address,
-        address_reference: supplier.address_reference,
-        city: supplier.city,
-    }));
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
@@ -85,9 +101,21 @@ export default function Suppliers({ suppliers }) {
                                 <h2 className="text-lg font-semibold">Proveedores</h2>
                                 <button onClick={() => window.location.href = route('supplier.create')} type='button' className='btn btn-primary'>Nuevo</button>
                             </div>
+
+                            {/* Campo de búsqueda */}
+                            <div className="my-4">
+                                <TextField
+                                    fullWidth
+                                    label="Buscar"
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid
-                                    rows={rows}
+                                    rows={filteredRows.length ? filteredRows : rows} // Mostrar filas filtradas
                                     columns={columns}
                                     initialState={{ pagination: { paginationModel } }}
                                     pageSizeOptions={[5, 10]}

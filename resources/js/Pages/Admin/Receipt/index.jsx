@@ -1,8 +1,32 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from '@mui/material';
+import { useState, useEffect } from 'react';
 
 export default function Index({ receipts }) {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredRows, setFilteredRows] = useState([]);
+
+    // Convertir los datos de recibos a un formato compatible con la tabla
+    const rows = receipts.map((receipt) => ({
+        id: receipt.id,
+        type: receipt.type === 'venta' ? 'Venta' : 'Compra',
+        total: `$${receipt.total.toFixed(2)}`,
+        created_at: new Date(receipt.created_at).toLocaleDateString(),
+    }));
+
+    // Filtrar filas basándose en el término de búsqueda
+    useEffect(() => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = rows.filter((row) =>
+            Object.values(row).some((value) =>
+                value.toString().toLowerCase().includes(lowerCaseSearchTerm)
+            )
+        );
+        setFilteredRows(filtered);
+    }, [searchTerm, rows]);
+
     const columns = [
         { field: 'id', headerName: 'ID', flex: 1 },
         { field: 'type', headerName: 'Tipo', flex: 1 },
@@ -43,13 +67,6 @@ export default function Index({ receipts }) {
         }
     };
 
-    const rows = receipts.map((receipt) => ({
-        id: receipt.id,
-        type: receipt.type === 'venta' ? 'Venta' : 'Compra',
-        total: `$${receipt.total.toFixed(2)}`,
-        created_at: new Date(receipt.created_at).toLocaleDateString(),
-    }));
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
@@ -72,12 +89,24 @@ export default function Index({ receipts }) {
                                     className="btn btn-primary"
                                     onClick={() => window.location.href = route('receipts.create')}
                                 >
-                                    Nuevo Recibo
+                                    Nueva Venta
                                 </button>
                             </div>
+
+                            {/* Campo de búsqueda */}
+                            <div className="mb-4">
+                                <TextField
+                                    fullWidth
+                                    label="Buscar"
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
                             <div style={{ height: 400, width: '100%' }}>
                                 <DataGrid
-                                    rows={rows}
+                                    rows={filteredRows.length ? filteredRows : rows} // Mostrar filas filtradas
                                     columns={columns}
                                     initialState={{ pagination: { paginationModel } }}
                                     pageSizeOptions={[5, 10]}

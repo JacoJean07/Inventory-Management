@@ -2,8 +2,48 @@ import * as React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from '@mui/material';
 
 export default function Customer({ customers }) {
+    // Estado para búsqueda
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [filteredRows, setFilteredRows] = React.useState([]);
+
+    // Convertir los datos de customers a un formato compatible con la tabla
+    const rows = customers.map((customer) => ({
+        id: customer.id,
+        name: customer.name,
+        email: customer.email || 'N/A',
+        phone: customer.phone || 'N/A',
+        address: customer.address || 'N/A',
+    }));
+
+    // Filtrar filas basándose en el término de búsqueda
+    React.useEffect(() => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = rows.filter((row) =>
+            Object.values(row).some((value) =>
+                value?.toString().toLowerCase().includes(lowerCaseSearchTerm)
+            )
+        );
+        setFilteredRows(filtered);
+    }, [searchTerm, rows]);
+
+    const handleDelete = (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
+            return;
+        }
+
+        router.delete(route('customers.destroy', id), {
+            onSuccess: () => {
+                alert('Cliente eliminado correctamente.');
+            },
+            onError: () => {
+                alert('Hubo un error al eliminar el cliente.');
+            },
+        });
+    };
+
     // Definir las columnas de la tabla de clientes
     const columns = [
         { field: 'id', headerName: 'ID', flex: 1 },
@@ -36,29 +76,6 @@ export default function Customer({ customers }) {
         },
     ];
 
-    const handleDelete = (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
-            return;
-        }
-
-        router.delete(route('customers.destroy', id), {
-            onSuccess: () => {
-                alert('Cliente eliminado correctamente.');
-            },
-            onError: () => {
-                alert('Hubo un error al eliminar el cliente.');
-            },
-        });
-    };
-
-    const rows = customers.map((customer) => ({
-        id: customer.id,
-        name: customer.name,
-        email: customer.email || 'N/A',
-        phone: customer.phone || 'N/A',
-        address: customer.address || 'N/A',
-    }));
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
@@ -83,9 +100,21 @@ export default function Customer({ customers }) {
                                     Nuevo
                                 </button>
                             </div>
+
+                            {/* Campo de búsqueda */}
+                            <div className="my-4">
+                                <TextField
+                                    fullWidth
+                                    label="Buscar"
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid
-                                    rows={rows}
+                                    rows={filteredRows.length ? filteredRows : rows} // Mostrar filas filtradas
                                     columns={columns}
                                     initialState={{ pagination: { paginationModel } }}
                                     pageSizeOptions={[5, 10]}

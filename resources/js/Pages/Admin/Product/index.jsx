@@ -2,8 +2,51 @@ import * as React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from '@mui/material';
 
 export default function Product({ products }) {
+    // Estado para búsqueda
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [filteredRows, setFilteredRows] = React.useState([]);
+
+    // Convertir los datos de productos a un formato compatible con la tabla
+    const rows = products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        sku: product.sku,
+        barcode: product.barcode,
+        category: product.category?.name || 'Sin categoría',
+        price: `$${product.price.toFixed(2)}`,
+        quantity: product.quantity,
+    }));
+
+    // Filtrar filas basándose en el término de búsqueda
+    React.useEffect(() => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = rows.filter((row) =>
+            Object.values(row).some((value) =>
+                value?.toString().toLowerCase().includes(lowerCaseSearchTerm)
+            )
+        );
+        setFilteredRows(filtered);
+    }, [searchTerm, rows]);
+
+    const handleDelete = (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+            return;
+        }
+
+        router.delete(route('product.destroy', id), {
+            onSuccess: () => {
+                alert('Producto eliminado correctamente.');
+            },
+            onError: () => {
+                alert('Hubo un error al eliminar el producto.');
+            },
+        });
+    };
+
     // Definir las columnas de la tabla productos
     const columns = [
         { field: 'id', headerName: 'ID', flex: 1 },
@@ -39,32 +82,6 @@ export default function Product({ products }) {
         },
     ];
 
-    const handleDelete = (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-            return;
-        }
-
-        router.delete(route('product.destroy', id), {
-            onSuccess: () => {
-                alert('Producto eliminado correctamente.');
-            },
-            onError: () => {
-                alert('Hubo un error al eliminar el producto.');
-            },
-        });
-    };
-
-    const rows = products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        sku: product.sku,
-        barcode: product.barcode,
-        category: product.category?.name || 'Sin categoría',
-        price: `$${product.price.toFixed(2)}`,
-        quantity: product.quantity,
-    }));
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
@@ -89,9 +106,21 @@ export default function Product({ products }) {
                                     Nuevo
                                 </button>
                             </div>
+
+                            {/* Campo de búsqueda */}
+                            <div className="my-4">
+                                <TextField
+                                    fullWidth
+                                    label="Buscar"
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid
-                                    rows={rows}
+                                    rows={filteredRows.length ? filteredRows : rows} // Mostrar filas filtradas
                                     columns={columns}
                                     initialState={{ pagination: { paginationModel } }}
                                     pageSizeOptions={[5, 10]}

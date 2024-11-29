@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import SalesCard from '@/Pages/Dashboard/SalesCard';
 import Overview from '@/Pages/Dashboard/Overview';
+import InventoryCritical from '@/Pages/Dashboard/InventoryCritical';
 
 export default function Dashboard({ statistics }) {
     return (
@@ -32,6 +33,18 @@ export default function Dashboard({ statistics }) {
                         topProducts={statistics.top_products}
                         topCustomers={statistics.top_customers}
                         salesTrend={statistics.sales_trend}
+                        profitByCategory={statistics.profit_by_category}
+                        salesByCategory={statistics.sales_by_category}
+                        criticalStock={statistics.critical_stock}
+                        inactiveProducts={statistics.inactive_products}
+                        totalStockValue={statistics.total_stock_value}
+                        highRotationProducts={statistics.high_rotation_products}
+                    />
+                </div>
+                <div className="py-12">
+                    <InventoryCritical
+                        criticalStock={statistics.critical_stock}
+                        inactiveProducts={statistics.inactive_products}
                     />
                 </div>
             </div>

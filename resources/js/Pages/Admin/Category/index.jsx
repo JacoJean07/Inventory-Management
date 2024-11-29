@@ -2,13 +2,51 @@ import * as React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from '@mui/material';
 
 export default function Category({ categories }) {
-    // Definir las columnas de la tabla supplier
+    // Estado para búsqueda
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [filteredRows, setFilteredRows] = React.useState([]);
+
+    // Convertir los datos de categorías a un formato compatible con la tabla
+    const rows = categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        description: category.description,
+    }));
+
+    // Filtrar filas basándose en el término de búsqueda
+    React.useEffect(() => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const filtered = rows.filter((row) =>
+            Object.values(row).some((value) =>
+                value?.toString().toLowerCase().includes(lowerCaseSearchTerm)
+            )
+        );
+        setFilteredRows(filtered);
+    }, [searchTerm, rows]);
+
+    const handleDelete = (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
+            return;
+        }
+
+        router.delete(route('category.destroy', id), {
+            onSuccess: () => {
+                alert('Categoría eliminada correctamente.');
+            },
+            onError: () => {
+                alert('Hubo un error al eliminar la categoría.');
+            },
+        });
+    };
+
+    // Definir las columnas de la tabla de categorías
     const columns = [
-        { field: 'id', headerName: 'ID', flex: 1},
+        { field: 'id', headerName: 'ID', flex: 1 },
         { field: 'name', headerName: 'Nombre', flex: 1 },
-        { field: 'description', headerName: 'Descripcion', flex: 1 },
+        { field: 'description', headerName: 'Descripción', flex: 1 },
         {
             field: 'actions',
             headerName: 'Acciones',
@@ -34,27 +72,6 @@ export default function Category({ categories }) {
         },
     ];
 
-    const handleDelete = (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
-            return;
-        }
-
-        router.delete(route('category.destroy', id), {
-            onSuccess: () => {
-                alert('Categoría eliminada correctamente.');
-            },
-            onError: () => {
-                alert('Hubo un error al eliminar la categoría.');
-            },
-        });
-    };
-
-    const rows = categories.map((categoty) => ({
-        id: categoty.id,
-        name: categoty.name,
-        description: categoty.description,
-    }));
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
@@ -63,23 +80,37 @@ export default function Category({ categories }) {
                 <h2 className="text-2xl font-bold flex items-center gap-2">
                     <i className="bi bi-tags-fill"></i>
                     <span className="divider divider-horizontal"></span>
-                    <p>Categorias</p>
+                    <p>Categorías</p>
                 </h2>
             }
         >
-            <Head title="Categorias" />
+            <Head title="Categorías" />
 
             <div className="py-12">
                 <div className="container mx-auto px-4">
                     <div className="card shadow-lg rounded-lg bg-base-100">
                         <div className="card-body">
-                            <div className='flex items-center justify-between'>
-                                <h2 className="text-lg font-semibold">Categorias</h2>
-                                <button onClick={() => window.location.href = route('category.create')} type='button' className='btn btn-primary'>Nuevo</button>
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-semibold">Categorías</h2>
+                                <button onClick={() => window.location.href = route('category.create')} type="button" className="btn btn-primary">
+                                    Nuevo
+                                </button>
                             </div>
+
+                            {/* Campo de búsqueda */}
+                            <div className="my-4">
+                                <TextField
+                                    fullWidth
+                                    label="Buscar"
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
                             <div className="rounded-lg border border-base-300">
                                 <DataGrid
-                                    rows={rows}
+                                    rows={filteredRows.length ? filteredRows : rows} // Mostrar filas filtradas
                                     columns={columns}
                                     initialState={{ pagination: { paginationModel } }}
                                     pageSizeOptions={[5, 10]}
