@@ -43,17 +43,24 @@ class DashboardController extends Controller
         $totalCustomers = Customer::count();
         $lowStockProducts = Product::where('quantity', '<', 10)->count();
 
-       // Filtrar productos más vendidos en el último mes
-       $topProducts = Product::select('id', 'name')
-       ->withSum(['receiptItems as quantity_sold' => function ($query) use ($lastMonth) {
-           $query->whereHas('receipt', function ($query) use ($lastMonth) {
-               $query->where('type', 'venta')
-                     ->where('created_at', '>=', $lastMonth);
-           });
-       }], 'quantity')
-       ->orderByDesc('quantity_sold')
-       ->take(5)
-       ->get();
+        // Filtrar productos más vendidos en el último mes
+        $topProducts = Product::select('id', 'name')
+            ->withSum(['receiptItems as quantity_sold' => function ($query) use ($lastMonth) {
+                $query->whereHas('receipt', function ($query) use ($lastMonth) {
+                    $query->where('type', 'venta')
+                            ->where('created_at', '>=', $lastMonth);
+                });
+            }], 'quantity')
+            ->orderByDesc('quantity_sold')
+            ->take(5)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'quantity_sold' => $product->quantity_sold ?? 0,
+                ];
+            });
 
         // Filtrar clientes más recurrentes en el último mes
         $topCustomers = Customer::whereHas('receipts', function ($query) use ($lastMonth) {
@@ -66,13 +73,20 @@ class DashboardController extends Controller
             }])
             ->orderByDesc('purchases')
             ->take(5)
-            ->get(['id', 'name', 'purchases']);
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'purchases' => $customer->purchases ?? 0,
+                ];
+            });
 
         // Tendencia de ventas (últimos 7 días)
         $salesTrend = collect(range(0, 6))->map(function ($daysAgo) {
             $date = now()->subDays($daysAgo)->toDateString();
             $sales = Receipt::whereDate('created_at', $date)->sum('total');
-            return ['date' => $date, 'sales' => $sales];
+            return ['date' => $date, 'sales' => $sales ?? 0];
         })->reverse()->values();
 
         //Ganancia por categoria:
@@ -84,7 +98,13 @@ class DashboardController extends Controller
             ->where('receipts.created_at', '>=', $lastMonth)
             ->groupBy('categories.name')
             ->orderByDesc('profit')
-            ->get();
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'category' => $category->category,
+                    'profit' => $category->profit ?? 0,
+                ];
+            });
 
         //Productos con mayor rotacion
         $highRotationProducts = Product::select('id', 'name')
@@ -122,20 +142,20 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'statistics' => [
-                'total_sales' => $totalSales,
-                'total_income' => $totalIncome,
-                'total_profit' => $totalProfit,
-                'total_customers' => $totalCustomers,
-                'low_stock_products' => $lowStockProducts,
-                'top_products' => $topProducts,
-                'high_rotation_products' => $highRotationProducts,
-                'profit_by_category' => $profitByCategory,
-                'critical_stock' => $criticalStock,
-                'total_stock_value' => $totalStockValue,
-                'sales_by_category' => $salesByCategory,
-                'inactive_products' => $inactiveProducts,
-                'top_customers' => $topCustomers,
-                'sales_trend' => $salesTrend,
+                'total_sales' => $totalSales ?? 0,
+                'total_income' => $totalIncome ?? 0,
+                'total_profit' => $totalProfit ?? 0,
+                'total_customers' => $totalCustomers ?? 0,
+                'low_stock_products' => $lowStockProducts ?? 0,
+                'top_products' => $topProducts->isEmpty() ? [] : $topProducts,
+                'high_rotation_products' => $highRotationProducts->isEmpty() ? [] : $highRotationProducts,
+                'profit_by_category' => $profitByCategory->isEmpty() ? [] : $profitByCategory,
+                'critical_stock' => $criticalStock->isEmpty() ? [] : $criticalStock,
+                'total_stock_value' => $totalStockValue ?? 0,
+                'sales_by_category' => $salesByCategory->isEmpty() ? [] : $salesByCategory,
+                'inactive_products' => $inactiveProducts->isEmpty() ? [] : $inactiveProducts,
+                'top_customers' => $topCustomers->isEmpty() ? [] : $topCustomers,
+                'sales_trend' => $salesTrend->isEmpty() ? [] : $salesTrend,
             ],
         ]);
 
