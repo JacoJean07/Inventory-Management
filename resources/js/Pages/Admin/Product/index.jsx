@@ -13,12 +13,17 @@ export default function Product({ products }) {
     const rows = products.map((product) => ({
         id: product.id,
         name: product.name,
-        description: product.description,
+        image: product.image_path, // Ruta de la imagen
         sku: product.sku,
         barcode: product.barcode,
         category: product.category?.name || 'Sin categoría',
-        price: `$${product.price.toFixed(2)}`,
+        price: `$${parseFloat(product.price).toFixed(2)}`,
         quantity: product.quantity,
+        variants: product.variants.map(variant => ({
+            size: variant.size || 'Sin talla',
+            color: variant.color || 'Sin color',
+            quantity: variant.quantity,
+        })),
     }));
 
     // Filtrar filas basándose en el término de búsqueda
@@ -49,14 +54,43 @@ export default function Product({ products }) {
 
     // Definir las columnas de la tabla productos
     const columns = [
-        { field: 'id', headerName: 'ID', flex: 1 },
+        { field: 'id', headerName: 'ID', flex: 0.5 },
         { field: 'name', headerName: 'Nombre', flex: 1 },
-        { field: 'description', headerName: 'Descripción', flex: 1 },
+        {
+            field: 'image',
+            headerName: 'Imagen',
+            flex: 1,
+            renderCell: (params) => (
+                params.row.image ? (
+                    <img
+                        src={params.row.image}
+                        alt="Producto"
+                        className="w-12 h-12 object-cover rounded-lg border"
+                    />
+                ) : (
+                    <span className="text-gray-500">Sin imagen</span>
+                )
+            ),
+        },
         { field: 'sku', headerName: 'SKU', flex: 1 },
         { field: 'barcode', headerName: 'Código de Barras', flex: 1 },
         { field: 'category', headerName: 'Categoría', flex: 1 },
         { field: 'price', headerName: 'Precio', flex: 1 },
-        { field: 'quantity', headerName: 'Cantidad', flex: 1 },
+        { field: 'quantity', headerName: 'Cantidad', flex: 0.5 },
+        {
+            field: 'variants',
+            headerName: 'Variantes',
+            flex: 2,
+            renderCell: (params) => (
+                <div>
+                    {params.row.variants.map((variant, index) => (
+                        <p key={index}>
+                            Talla: {variant.size}, Color: {variant.color}, Cantidad: {variant.quantity}
+                        </p>
+                    ))}
+                </div>
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Acciones',
@@ -141,9 +175,6 @@ export default function Product({ products }) {
                                         '& .MuiDataGrid-footerContainer': {
                                             backgroundColor: 'var(--tw-bg-opacity)',
                                             color: 'var(font-semibold)',
-                                        },
-                                        '& .MuiDataGrid-selectedRowCount': {
-                                            color: 'var()',
                                         },
                                     }}
                                     className="bg-base-300 text-base-content"

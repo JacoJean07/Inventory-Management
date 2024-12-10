@@ -12,6 +12,7 @@ use App\Http\Requests\Receipt\StoreReceiptRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
+use App\Models\StoreInformation;
 
 class ReceiptController extends Controller
 {
@@ -108,6 +109,46 @@ class ReceiptController extends Controller
 
         return Inertia::render('Admin/Receipt/show', [
             'receipt' => $receipt->load('items.product', 'user')
+        ]);
+    }
+
+    /**
+     * Metodo para realizar un pdf de una venta o tambien dicho, un recibo
+     */
+
+    public function getInvoiceData($receiptId)
+    {
+        //informacion de la tienda
+        $storeInfo = StoreInformation::first();
+
+        //info del recibo
+        $receipt = Receipt::with(['items.product', 'user', 'customer'])
+            ->findOrFail($receiptId);
+
+        //Construir una respuesta
+        return response()->json([
+            'storeInfo' => [
+                'name' => $storeInfo->name ?? 'Nombre no configurado',
+                'address' => $storeInfo->address ?? 'Direccion no configurada',
+                'city' => $storeInfo->city ?? 'Ciudad no configurada',
+                'phone' => $storeInfo->phone ?? 'Telefono no configurado',
+                'email' => $storeInfo->email ?? 'Email no configurado',
+            ],
+            'sale' => [
+                'id' => $receipt->id,
+                'date' => $receipt->created_at,
+                'customerName' => $receipt->customer->name ?? 'Consumidor Final',
+                'products' => $receipt->items->map(function ($item) {
+                    return [
+                        'name' => $item->product->name,
+                        'quantity' => $item->quantity,
+                        'price' => $item->price,
+                        'discount' => $item->discount,
+                        'total' => $item->quantity * ($item->price - $item->discount),
+                    ];
+                }),
+                'total' => $receipt->total,
+            ],
         ]);
     }
 }

@@ -36,4 +36,10 @@ class Product extends Model
     {
         return $this->hasMany(ReceiptItem::class);
     }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
 }

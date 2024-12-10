@@ -36,9 +36,9 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             AssignRolesSeeder::class,
             SupplierSeeder::class,
-            CategorySeeder::class,
-            ProductSeeder::class,
-            CustomerSeeder::class,
+            // CategorySeeder::class,
+            // ProductSeeder::class,
+            // CustomerSeeder::class,
         ]);
     }
 }

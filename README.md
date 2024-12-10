@@ -1,66 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventory Management v0.1.3
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> ⚠️ **Proyecto en Desarrollo**
+> Este proyecto aún está en desarrollo y puede contener errores. Por favor, no lo uses en producción.
 
-## About Laravel
+Una aplicación web para gestionar inventarios, permitiendo registrar, editar y eliminar productos con variantes, colores, tallas, imágenes, entre otros.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Tecnologías Utilizadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Backend:** PHP 8.2, Laravel 11
+- **Frontend:** React, Inertia.js, Tailwind CSS, DaisyUI
+- **Componentes Adicionales:** ApexCharts, MUI, Styled Components
+- **Gestión de Roles y Permisos:** Spatie Laravel Permission
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📦 Dependencias
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Composer:
+```bash
+composer require inertiajs/inertia-laravel laravel/sanctum spatie/laravel-permission tightenco/ziggy
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### NPM:
+```bash
+npm install @emotion/react @emotion/styled @heroicons/react @inertiajs/react @mui/icons-material @mui/material react-apexcharts styled-components bootstrap-icons daisyui
+```
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠️ Instalación
 
-### Premium Partners
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/JacoJean07/Inventory-Management.git
+   cd inventory-management
+   ```
+2. **Instala dependencias:**
+   ```bash
+   composer install
+   npm install
+   ```
+3. **Configura el entorno:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+4. **Crea y migra la base de datos:**
+   ```bash
+   touch database/database.sqlite
+   php artisan migrate --seed
+   ```
+5. **Inicia el servidor:**
+   ```bash
+   npm run dev & php artisan serve
+   ```
+6. **Accede a la app:**
+   Abre [http://localhost:8000](http://localhost:8000).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## ✅ Funcionalidades
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🛒 Productos
+- Agregar, editar y eliminar productos.
+- Manejo de variantes: colores y tallas.
+- Subida de imágenes por producto.
 
-## Code of Conduct
+### 📊 Estadísticas
+- Visualización gráfica de ventas y compras usando ApexCharts.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 📄 Recibos
+- Generación de recibos de ventas y compras.
+- Gestión de productos dentro de los recibos.
 
-## Security Vulnerabilities
+### 🗂️ Categorías
+- Crear, editar y eliminar categorías.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 👥 Clientes y Proveedores
+- Gestión de clientes y proveedores.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📝 Cosas Pendientes
+
+### Funcionalidades
+- [ ] **Tallas:**
+  - Permitir tallas personalizadas.
+  - Mejora en la relación entre productos y tallas.
+- [ ] **Colores:**
+  - Mejorar el manejo con selectores dinámicos.
+- [ ] **Imágenes:**
+  - Validar el almacenamiento y eliminación de imágenes cargadas.
+- [ ] **Control de Inventario:**
+  - Manejo avanzado de niveles de inventario.
+- [ ] **Integración de Reportes:**
+  - Generar reportes en formato PDF y Excel.
+
+---
+
+## 🔧 Uso
+
+### Comandos útiles:
+
+#### Migrar base de datos
+```bash
+php artisan migrate --seed
+```
+
+#### Iniciar servidor local
+```bash
+php artisan serve
+```
+
+#### Compilar assets
+```bash
+npm run dev
+```
+
+---
+
+## 🖼️ Ejemplo de Código
+
+```bash
+# Crear un producto con variantes
+POST /api/products
+{
+  "name": "Camiseta Unisex",
+  "description": "Camiseta básica unisex",
+  "category_id": 1,
+  "price": 15.99,
+  "colors": ["#FF0000", "#00FF00"],
+  "sizes": ["M", "L"],
+  "images": ["image1.jpg", "image2.jpg"]
+}
+```
+
+---
+
+## 🤝 Contribuciones
+
+¡Las contribuciones son bienvenidas! Por favor, abre un **issue** o envía un **pull request**.
+
+---
+
+## 👨‍💻 Autor
+
+[JacoJean](https://jacojean.pro) - Desarrollador Full Stack Junior con ❤.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT.
+

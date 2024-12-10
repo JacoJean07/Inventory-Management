@@ -3,6 +3,9 @@ import { Head, router } from '@inertiajs/react';
 import { DataGrid } from '@mui/x-data-grid';
 import { TextField } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { saveAs } from 'file-saver';
+import { pdf } from '@react-pdf/renderer';
+import InvoicePDF from '../../../Components/InvoicePDF';
 
 export default function Index({ receipts }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,9 +44,9 @@ export default function Index({ receipts }) {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => window.location.href = route('receipts.show', params.row.id)}
+                        onClick={() => handleGeneratePDF(params.row.id)}
                     >
-                        Ver
+                        PDF
                     </button>
                     <button
                         type="button"
@@ -56,6 +59,28 @@ export default function Index({ receipts }) {
             ),
         },
     ];
+
+    // Función para generar y descargar el PDF
+    const handleGeneratePDF = async (id) => {
+        try {
+            // Obtener datos de la API
+            const response = await fetch(route('receipts.invoiceData', id));
+            const data = await response.json();
+
+            // Generar el PDF como blob
+            const blob = await pdf(<InvoicePDF storeInfo={data.storeInfo} sale={data.sale} />).toBlob();
+
+            // Descargar el PDF
+            saveAs(blob, `recibo-${id}.pdf`); // Con file-saver
+            // O usando el API nativo:
+            // const link = document.createElement('a');
+            // link.href = URL.createObjectURL(blob);
+            // link.download = `recibo-${id}.pdf`;
+            // link.click();
+        } catch (error) {
+            console.error('Error al generar el PDF:', error);
+        }
+    };
 
     // Manejo de eliminación
     const handleDelete = (id) => {

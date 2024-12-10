@@ -39,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/product', \App\Http\Controllers\ProductController::class);
     Route::resource('/admin/receipts', \App\Http\Controllers\ReceiptController::class);
 
+    // ruta para el endpoint para realizar el pdf
+    Route::get('/admin/receipts/{receiptId}/invoice-data', [ReceiptController::class, 'getInvoiceData'])
+    ->name('receipts.invoiceData');
+
     // Route para actualizar el tema
     Route::post('/set-theme', function (Illuminate\Http\Request $request) {
         session(['theme' => $request->theme]);

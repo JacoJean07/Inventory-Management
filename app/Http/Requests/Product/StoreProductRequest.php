@@ -23,7 +23,7 @@ class StoreProductRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'sku' => "required|string|unique:products,sku,{$productId}|max:255",
             'barcode' => "required|string|unique:products,barcode,{$productId}|max:255",
             'price' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -31,6 +31,20 @@ class StoreProductRequest extends FormRequest
             'quantity' => 'required|integer|min:0',
             'reorder_level' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
+
+            // Validación para tallas
+            'size_type' => 'required|string|in:camisa,pantalon,otros',
+            'selected_sizes' => 'array|required_if:size_type,camisa|required_if:size_type,pantalon',
+            'selected_sizes.*' => 'string|max:255',
+            'custom_size' => 'nullable|string|max:255|required_if:size_type,otros',
+
+            // Validación para colores
+            'selected_colors' => 'array',
+            'selected_colors.*' => 'string|max:255',
+
+            // Validación para imágenes
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -76,6 +90,23 @@ class StoreProductRequest extends FormRequest
 
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.exists' => 'La categoría seleccionada no es válida.',
+
+            'size_type.required' => 'El tipo de talla es obligatorio.',
+            'size_type.in' => 'El tipo de talla seleccionado no es válido.',
+            'selected_sizes.required_if' => 'Debes seleccionar al menos una talla si el tipo es camisa o pantalón.',
+            'selected_sizes.array' => 'Las tallas deben ser enviadas como un arreglo.',
+            'selected_sizes.*.string' => 'Cada talla debe ser una cadena de texto.',
+            'custom_size.required_if' => 'La talla personalizada es obligatoria si seleccionas "otros".',
+            'custom_size.string' => 'La talla personalizada debe ser una cadena de texto.',
+            'custom_size.max' => 'La talla personalizada no debe superar los 255 caracteres.',
+
+            'selected_colors.array' => 'Los colores deben ser enviados como un arreglo.',
+            'selected_colors.*.string' => 'Cada color debe ser una cadena de texto.',
+
+            'images.array' => 'Las imágenes deben ser enviadas como un arreglo.',
+            'images.*.image' => 'Cada archivo debe ser una imagen.',
+            'images.*.mimes' => 'Las imágenes deben estar en formato: jpeg, png, jpg, gif.',
+            'images.*.max' => 'Cada imagen no debe exceder los 2 MB.',
         ];
     }
 }
